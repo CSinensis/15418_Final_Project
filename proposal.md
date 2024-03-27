@@ -60,8 +60,6 @@ The algorithm we are profiling has a degree of time dependency, where future com
 
 ## Resources:
 
-https://www.nvidia.com/content/gtc-2010/pdfs/2116_gtc2010v2.pdf
-
 To implement parallelized audio convolution, we will need to use Nvidia GPUs. We intend to create our code base from scratch, potentially with inspiration from 15418 assignment 2’s memory passing implementation. We will first develop a sequential working algorithm in MATLAB based on various paper implementations of Non-Uniform Partitioning, and then we will begin development in Cuda with the Thrust Library. 
 
 We have also looked at the following resources to gain a better understanding of the theory behind what we are trying to implement:
