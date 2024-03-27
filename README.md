@@ -1,7 +1,19 @@
-# 15418_Final_Project
+# 15418_Final_Project: Proposal
 
-**Project Idea**
-slkjhalkdgjhsdlkfgjhsdkfgs
+##**Title: Profiling Real-Time Non-Uniformly Partitioned Audio Convolution (Melinda Chen, Ruslana Fogler)**
 
+##**Summary: **
+We are going to investigate and compare different filter strategies for non-uniformly partitioned convolutions, which can be used to perform real-time audio processing. We will implement these partitioned convolutions on a GPU, focusing specifically on how partition strategy affects workload imbalance, ability to keep up with real-time constraints, and potential for latency hiding.
 
-Yeehaw
+##**Background:**
+###What is Audio Convolution?
+Audio convolution is the mathematical process of multiplying the frequency spectra of two audio sources. This will cause shared frequency ranges to be amplified and unshared frequency ranges to be reduced, and is typically done by taking the Fast Fourier Transforms of two signals, multiplying them together, and then Inverse Fast Fourier Transforming them back. This process is heavily used in sound production and in movie, video game, or other virtual reality contexts to give the impression that a character or noise is heard in a particular environment. For example, the reverberating voices of characters speaking in a cave, 3D audio, and suitable motion-picture production audio are all produced using this algorithm. Generally, convolution for the sake of audio processing is done by multiplying the frequency spectra of an input audio signal with the spectra of a filter impulse response, allowing the input signal to take on the characteristics of the filter response’s environment.
+
+###What has been done?
+In the past decade, there have been many advancements made in parallelizing audio convolutions using GPUs. However, there is still a lot of room for improvement of real-time GPU audio processing, which continues to suffer from FFT redundancy and bandwidth expense. Researchers have looked into strategies for smartly breaking up and grouping together input signals to reduce the amount of extra work performed while staying within bounds of ‘real time’ updates. Our objective is to expand upon this work by exploring strategies of partitioned convolution algorithms on the GPU.
+
+###What are non-uniform filter partitions?
+There are two time scales that are vital to consider when performing real-time audio processing: the length of a streamed input sound block (B), and the length of the filter impulse response (N). When N is significantly larger than B, performing a naive convolution becomes inefficient since B needs to be padded to carry out matrix operations with N. 
+One way to address this problem is to partition the filter impulse response into many smaller filters which have similar sizes to B and combine the smaller filtered outputs into one stream. These filter partitions also offer another axis of parallelism, as none of the smaller outputs are dependent on each other.
+Partitioning the filter impulse response into equal-sized chunks is referred to as uniform filter partitioning. While this helps to reduce unnecessary padding, there is still another challenge to address with real-time audio processing, which is that there is a tradeoff between lowering input-output latency (generally achieved by decreasing the streamed sound block size, B) and increasing computational cost via more overhead.
+Non-uniform filter partitioning addresses this concern by taking advantage of the fact that a partition of the impulse response starting at time t = i only starts to contribute to the output after timestep i. Thus, it is possible to maintain the same amount of input-output latency while decreasing overhead cost by making the latter blocks in the filter partition larger. As long as the amount of time it takes to process the latter partitions is less than the offset of the partition from the start of the impulse response, no additional delay will be introduced.
