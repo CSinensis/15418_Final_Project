@@ -1,22 +1,22 @@
 # Project Proposal
 
-##Title: Profiling Real-Time Non-Uniformly Partitioned Audio Convolution (Melinda Chen, Ruslana Fogler)
+## Title: Profiling Real-Time Non-Uniformly Partitioned Audio Convolution (Melinda Chen, Ruslana Fogler)
 
-##Summary: 
+## Summary: 
 
 We are going to investigate and compare different filter strategies for non-uniformly partitioned convolutions, which can be used to perform real-time audio processing. We will implement these partitioned convolutions on a GPU, focusing specifically on how partition strategy affects workload imbalance, ability to keep up with real-time constraints, and potential for latency hiding.
 
-##Background:
+## Background:
 
-###What is Audio Convolution?
+### What is Audio Convolution?
 
 Audio convolution is the mathematical process of multiplying the frequency spectra of two audio sources. This will cause shared frequency ranges to be amplified and unshared frequency ranges to be reduced, and is typically done by taking the Fast Fourier Transforms of two signals, multiplying them together, and then Inverse Fast Fourier Transforming them back. This process is heavily used in sound production and in movie, video game, or other virtual reality contexts to give the impression that a character or noise is heard in a particular environment. For example, the reverberating voices of characters speaking in a cave, 3D audio, and suitable motion-picture production audio are all produced using this algorithm. Generally, convolution for the sake of audio processing is done by multiplying the frequency spectra of an input audio signal with the spectra of a filter impulse response, allowing the input signal to take on the characteristics of the filter response’s environment.
 
-###What has been done?
+### What has been done?
 
 In the past decade, there have been many advancements made in parallelizing audio convolutions using GPUs. However, there is still a lot of room for improvement of real-time GPU audio processing, which continues to suffer from FFT redundancy and bandwidth expense. Researchers have looked into strategies for smartly breaking up and grouping together input signals to reduce the amount of extra work performed while staying within bounds of ‘real time’ updates. Our objective is to expand upon this work by exploring strategies of partitioned convolution algorithms on the GPU.
 
-###What are non-uniform filter partitions?
+### What are non-uniform filter partitions?
 
 There are two time scales that are vital to consider when performing real-time audio processing: the length of a streamed input sound block (B), and the length of the filter impulse response (N). When N is significantly larger than B, performing a naive convolution becomes inefficient since B needs to be padded to carry out matrix operations with N. 
 One way to address this problem is to partition the filter impulse response into many smaller filters which have similar sizes to B and combine the smaller filtered outputs into one stream. These filter partitions also offer another axis of parallelism, as none of the smaller outputs are dependent on each other.
@@ -28,11 +28,11 @@ Non-uniform filter partitioning addresses this concern by taking advantage of th
 
 ![Partitioning Scheme](files/non-uniform partition.png)
 
-##Challenge:
+## Challenge:
 
 The main challenge of this project involves partitioning and pipelining the audio convolution in a way that will allow for real-time processing. Since we are focusing specifically on non-uniform partitioning, we will have to come up with strategies to balance the workloads of these partitions. Since each partition’s ‘deadline’ for outputting a signal is dependent on the start of the partition, solving this problem becomes significantly more complex than just using dynamic assignment, because the order in which partitions are executed plays a role in maintaining the perception of ‘real-time’ processing.
 
-###Workload:
+### Workload:
 
 Dependencies:
 
@@ -42,7 +42,7 @@ Memory Access Characteristics:
 
 Within each partition of the filter response, we are likely to have good locality, given that the partitions simply just chunk together portions of the filter response by time. However, it is possible that we will run into issues when carrying out the convolutions with the input block, since each partition will need to access the same block. Thus, we may consider either creating copies of the input block, or decreasing contention by giving priority to earlier partitions. 
 
-###Constraints:
+### Constraints:
 
 High Bandwidth Consumption:
 
@@ -58,7 +58,7 @@ Synchronization Challenge:
 Synchronization is tricky because you need to hide the latency of the data transfer and convolution computation because of the real-time nature of the sound and being able to have the next value in time. 
 The algorithm we are profiling has a degree of time dependency, where future computations of the data will need to be ready in time as the current timestep finishes, but limited bandwidth of the GPU ensures we cannot “lookahead” to all future input values at once
 
-##Resources:
+## Resources:
 
 https://www.nvidia.com/content/gtc-2010/pdfs/2116_gtc2010v2.pdf
 
@@ -72,7 +72,7 @@ Papers:
 - Wefers, Frank. (2014). Partitioned convolution algorithms for real-time auralization.  
 
 
-##Goals & Deliverables:
+## Goals & Deliverables:
 
 Our main goal will be to produce the partitioning algorithm on Cuda that will perform an audio convolution of data in real time. Deliverables will include profiling of the real time audio’s work distribution, latency, and bandwidth consumption as we vary partitioning size and strategy. Since we are interested in seeing how different forms of partitioning can affect real time audio, we hope to have this algorithm support different kinds of music inputs and still be able to produce real-time accurate results. 
 
@@ -86,14 +86,14 @@ Another huge stretch goal for our project would be to demonstrate our audio conv
 
 
 
-##Platform Choice: 
+## Platform Choice: 
 
 We plan to take advantage of the Thrust library and C++ Cuda to write our code. The Thrust library includes Fast Fourier Transform functions, so we will be able to focus on the work distribution, partitioning, and synchronization aspects of the project. 
 
 Using GPUs is a strong choice for this project, because it involves a large amount of pointwise multiplication against many data values at once. Similarly, we are seeking to profile and improve upon current real-time GPU audio implementations, so our project constraint is hinged on the use of GPUs. 
 
 
-##Schedule:
+## Schedule:
 
 ![Schedule](files/schedule.png)
 
