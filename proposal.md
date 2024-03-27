@@ -48,7 +48,9 @@ High Bandwidth Consumption:
 
 The biggest challenge in real-time processing with GPUs is the CPU-GPU bandwidth transfer limitations. 
 We will experience huge difficulty in trying to use input buffering to transfer meaningful amounts of data while hiding the latency
-Work Assignment Variations
+
+Work Assignment Variations:
+
 Work assignment is delicate; since our partitioning goal relies on chunking up the signal into small blocks that grow increasingly larger during the duration of the real-time convolution
 We need to cleverly sample our data’s amplitude at the start and assign block sizes that will feasibly compute the current input data while simultaneously computing a reasonable amount of future input data
 This work assignment is highly variable depending on the nature of data we receive, so we will need to make this very adaptable for different circumstances
