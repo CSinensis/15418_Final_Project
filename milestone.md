@@ -1,6 +1,6 @@
 # Milestone Report 
 
-## PDF Report: ![Milestone Report](files/15418 Project Milestone Report.pdf)
+## PDF Report: [Milestone Report](https://drive.google.com/file/d/1hV4eBv4CGf5iIqF90GjPQDu1bnLz9QSn/view?usp=sharing)
 
 ## Updated Schedule: 
 ![Updated Schedule](files/milestone_schedule.png)
