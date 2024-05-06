@@ -3,7 +3,7 @@
 ## Title: Profiling Real-Time Non-Uniformly Partitioned Audio Convolution (Melinda Chen, Ruslana Fogler)
 
 ## Milestone Report Page: [Milestone](https://csinensis.github.io/15418_Final_Project/milestone)
-
+## Final Report Link: [Report Link](https://drive.google.com/file/d/1Rfm1VH8b5x2YurCJmFPNbusnr4qg3Ngm/view?usp=sharing)
 ## Summary: 
 
 We are going to investigate and compare different filter strategies for non-uniformly partitioned convolutions, which can be used to perform real-time audio processing. We will implement these partitioned convolutions on a GPU, focusing specifically on how partition strategy affects workload imbalance, ability to keep up with real-time constraints, and potential for latency hiding.
